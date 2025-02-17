@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上傳圖片到 Imgur</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #d9d9d9;
+        }
+        #successMessage {
+            display: none;
+            color: white;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        #errorMessage {
+            display: none;
+            color: red;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        #result a {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>上傳圖片到 Imgur</h2>
+    <input type="file" id="fileInput">
+    <button onclick="uploadImage()">上傳</button>
+    <p id="result"></p>
+    <p id="successMessage">✅ 上傳成功！</p>
+    <p id="errorMessage">❌ 請選擇一張圖片！</p>
+
+    <script>
+    async function uploadImage() {
+        let fileInput = document.getElementById("fileInput");
+        let successMessage = document.getElementById("successMessage");
+        let errorMessage = document.getElementById("errorMessage");
+        let result = document.getElementById("result");
+
+        // 清除之前的訊息
+        successMessage.style.display = "none";
+        errorMessage.style.display = "none";
+        result.innerHTML = "";
+
+        // 檢查是否有選擇圖片
+        if (!fileInput.files[0]) {
+            errorMessage.style.display = "block";
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("image", fileInput.files[0]);
+
+        let response = await fetch("https://api.imgur.com/3/image", {
+            method: "POST",
+            headers: {
+                "Authorization": "Client-ID 830798634d8a138" // 替換為你的 Imgur Client ID
+            },
+            body: formData
+        });
+
+        let data = await response.json();
+        
+        // 顯示成功訊息
+        successMessage.style.display = "block";
+        result.innerHTML = `<a href="${data.data.link}" target="_blank">查看圖片</a>`;
+    }
+    </script>
+</body>
+</html>
