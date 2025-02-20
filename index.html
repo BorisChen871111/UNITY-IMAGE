@@ -72,19 +72,50 @@
         let formData = new FormData();
         formData.append("image", fileInput.files[0]);
 
-        let response = await fetch("https://api.imgur.com/3/image", {
-            method: "POST",
-            headers: {
-                "Authorization": "Client-ID 830798634d8a138" // 替換為你的 Imgur Client ID
-            },
-            body: formData
-        });
+        try {
+            let response = await fetch("https://api.imgur.com/3/image", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Client-ID 830798634d8a138" // 替換為你的 Imgur Client ID
+                },
+                body: formData
+            });
 
-        let data = await response.json();
+            let data = await response.json();
+
+            if (data.success) {
+                let imageUrl = data.data.link;
+
+                // 顯示成功訊息
+                successMessage.style.display = "block";
+                result.innerHTML = `<a href="${imageUrl}" target="_blank">查看圖片</a>`;
+
+                // 將圖片 URL 發送給 Unity PC 客戶端
+                sendToUnity(imageUrl);
+            } else {
+                errorMessage.style.display = "block";
+                errorMessage.innerText = "❌ 上傳失敗，請稍後再試！";
+            }
+        } catch (error) {
+            console.error("上傳過程出錯:", error);
+            errorMessage.style.display = "block";
+            errorMessage.innerText = "❌ 發生錯誤，請檢查網路連線";
+        }
+    }
+
+    // 將圖片 URL 發送到 Unity PC 客戶端
+    function sendToUnity(imageUrl) {
+        // 使用 WebSocket 或 HTTP 方式發送圖片 URL 到 Unity PC 客戶端
+        // 假設我們使用 WebSocket
+        let socket = new WebSocket("ws://192.168.0.156:3000");
         
-        // 顯示成功訊息
-        successMessage.style.display = "block";
-        result.innerHTML = `<a href="${data.data.link}" target="_blank">查看圖片</a>`;
+        socket.onopen = () => {
+            socket.send(imageUrl);
+        };
+        
+        socket.onerror = (error) => {
+            console.error("WebSocket 發送錯誤: ", error);
+        };
     }
     </script>
 </body>
