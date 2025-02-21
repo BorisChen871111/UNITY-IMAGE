@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>上傳圖片到南美館AI風格演算</title>
+    <title>臺南美術館AI風格演算</title>
     <style>
         body {
             background-color: black;
@@ -44,7 +44,7 @@
     </style>
 </head>
 <body>
-    <h2>上傳圖片到南美館AI風格演算</h2>
+    <h2>臺南美術館AI風格演算</h2>
     <input type="file" id="fileInput">
     <button onclick="uploadImage()">上傳</button>
     <p id="result"></p>
@@ -107,7 +107,7 @@
     function sendToUnity(imageUrl) {
         // 使用 WebSocket 或 HTTP 方式發送圖片 URL 到 Unity PC 客戶端
         // 假設我們使用 WebSocket
-        let socket = new WebSocket("ws://192.168.0.156:3000");
+        let socket = new WebSocket("wss://giant-unique-asparagus.glitch.me/");
         
         socket.onopen = () => {
             socket.send(imageUrl);
