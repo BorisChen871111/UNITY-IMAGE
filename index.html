@@ -5,55 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>臺南美術館AI風格演算</title>
     <style>
+        /* 設定背景圖片 */
         body {
-            background-color: black;
-            color: white;
-            text-align: center;
-            font-family: Arial, sans-serif;
-            padding: 20px;
+        background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), 
+            url("https://raw.githubusercontent.com/BorisChen871111/UNITY-IMAGE/main/art.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: black;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        font-weight: bold; /* 加粗體 */
+        padding: 20px;
         }
+
         input, button {
             margin: 10px;
             padding: 10px;
             font-size: 16px;
+            font-weight: bold; /* 加粗體 */
         }
+
+        /* 按鈕樣式 */
         button {
             background-color: white;
             color: black;
-            border: none;
+            border: 2px solid black; /* 加上邊框 */
             cursor: pointer;
         }
+
         button:hover {
             background-color: #d9d9d9;
         }
+
+        /* 選擇檔案的按鈕背景設為白色 */
+        #fileInputButton {
+            background-color: white; /* 設定白色背景 */
+            border: 2px solid black; /* 邊框顏色 */
+            font-weight: bold; /* 加粗字體 */
+            cursor: pointer;
+        }
+
         #successMessage {
             display: none;
-            color: white;
+            color: black;
             font-size: 18px;
             margin-top: 10px;
+            font-weight: bold; /* 加粗體 */
         }
+
         #errorMessage {
             display: none;
             color: red;
             font-size: 18px;
             margin-top: 10px;
+            font-weight: bold; /* 加粗體 */
         }
+
         #result a {
-            color: white;
+            color: black;
+            font-weight: bold; /* 加粗體 */
+        }
+
+        /* Loading 轉圈圈動畫 (預設隱藏) */
+        .loading-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid black;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <h2>臺南美術館AI風格演算</h2>
-    <input type="file" id="fileInput">
+    <input type="file" id="fileInput" style="display: none;" onchange="updateFileName()">
+    <button id="fileInputButton" onclick="document.getElementById('fileInput').click();">選擇檔案</button>
+    <span id="fileNameDisplay">尚未選擇任何檔案</span> <!-- 預設顯示檔案尚未選擇 -->
     <button onclick="uploadImage()">上傳</button>
     <p id="result"></p>
     <p id="successMessage">✅ 上傳成功！<br>請至機台前確認您上傳的圖片</p>
     <p id="errorMessage">❌ 請選擇一張圖片！</p>
 
+    <!-- Loading 轉圈圈 -->
+    <div class="loading-container" id="loading">
+        <div class="spinner"></div>
+    </div>
+
     <script>
+    // 更新檔名顯示
+    function updateFileName() {
+        let fileInput = document.getElementById("fileInput");
+        let fileNameDisplay = document.getElementById("fileNameDisplay");
+
+        // 顯示檔名
+        if (fileInput.files.length > 0) {
+            fileNameDisplay.textContent = `${fileInput.files[0].name}`;
+        } else {
+            fileNameDisplay.textContent = "尚未選擇任何檔案"; // 如果沒有選擇檔案顯示預設文字
+        }
+    }
+
     async function uploadImage() {
         let fileInput = document.getElementById("fileInput");
+        let loading = document.getElementById("loading");
         let successMessage = document.getElementById("successMessage");
         let errorMessage = document.getElementById("errorMessage");
         let result = document.getElementById("result");
@@ -63,7 +137,7 @@
         errorMessage.style.display = "none";
         result.innerHTML = "";
 
-        // 檢查是否有選擇圖片
+        // 檢查是否有選擇檔案
         if (!fileInput.files[0]) {
             errorMessage.style.display = "block";
             return;
@@ -73,6 +147,9 @@
         formData.append("image", fileInput.files[0]);
 
         try {
+            // 按下「上傳」後顯示 loading
+            loading.style.display = "flex";
+
             let response = await fetch("https://api.imgur.com/3/image", {
                 method: "POST",
                 headers: {
@@ -82,6 +159,9 @@
             });
 
             let data = await response.json();
+
+            // 上傳完成後隱藏 loading
+            loading.style.display = "none";
 
             if (data.success) {
                 let imageUrl = data.data.link;
@@ -100,13 +180,12 @@
             console.error("上傳過程出錯:", error);
             errorMessage.style.display = "block";
             errorMessage.innerText = "❌ 發生錯誤，請檢查網路連線";
+            loading.style.display = "none"; // 確保錯誤時隱藏 loading
         }
     }
 
     // 將圖片 URL 發送到 Unity PC 客戶端
     function sendToUnity(imageUrl) {
-        // 使用 WebSocket 或 HTTP 方式發送圖片 URL 到 Unity PC 客戶端
-        // 假設我們使用 WebSocket
         let socket = new WebSocket("wss://giant-unique-asparagus.glitch.me/");
         
         socket.onopen = () => {
