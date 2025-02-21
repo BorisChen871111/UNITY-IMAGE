@@ -119,7 +119,9 @@
 
         // 顯示檔名
         if (fileInput.files.length > 0) {
-            fileNameDisplay.textContent = `${fileInput.files[0].name}`;
+            // 使用 decodeURIComponent 解碼特殊字符
+            let fileName = decodeURIComponent(fileInput.files[0].name);
+            fileNameDisplay.textContent = `${fileName}`;
         } else {
             fileNameDisplay.textContent = "尚未選擇任何檔案"; // 如果沒有選擇檔案顯示預設文字
         }
