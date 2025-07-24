@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Image Download</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    img {
+      width: 600px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Random Image Download</h2>
+  <a id="downloadLink" download>
+    <img id="randomImage" src="" >
+  </a>
+
+  <script>
+    const images = [
+      "https://raw.githubusercontent.com/BorisChen871111/UNITY-IMAGE/main/image1.jpeg",
+      "https://raw.githubusercontent.com/BorisChen871111/UNITY-IMAGE/main/image2.png",
+      "https://raw.githubusercontent.com/BorisChen871111/UNITY-IMAGE/main/image13.jpg",
+      "https://raw.githubusercontent.com/BorisChen871111/UNITY-IMAGE/main/image4.jpg",
+      "https://raw.githubusercontent.com/BorisChen871111/UNITY-IMAGE/main/image5.jpg"
+    ];
+
+    const randomIndex = Math.floor(Math.random() * images.length);
+    const selectedImage = images[randomIndex];
+
+    const imgEl = document.getElementById("randomImage");
+    const linkEl = document.getElementById("downloadLink");
+
+    imgEl.src = selectedImage;
+    linkEl.href = selectedImage;
+  </script>
+</body>
+</html>
