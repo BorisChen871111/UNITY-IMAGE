@@ -5,24 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Random Image Download</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    /* 背景影片設定 */
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover; /* 重點：讓影片自適應並填滿 */
+      z-index: -1;
+    }
+
     body {
       font-family: sans-serif;
       text-align: center;
       padding: 30px;
       margin: 0;
-
-      /* ✅ 背景圖片設定 */
-      background-image: url('https://raw.githubusercontent.com/BorisChen871111/UNITY-IMAGE/main/image6.jpg');
-      background-size: cover;           /* 讓背景填滿畫面 */
-      background-position: center;      /* 背景居中 */
-      background-repeat: no-repeat;     /* 不重複 */
+      color: white;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
     }
 
     h2 {
       font-size: 32px;
       margin-bottom: 20px;
-      color: white;  /* 根據背景圖片調整字色 */
-      text-shadow: 0 0 5px rgba(0,0,0,0.7); /* 加點陰影更清晰 */
     }
 
     img {
@@ -30,7 +40,7 @@
       max-width: 600px;
       height: auto;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
       display: block;
       margin: 0 auto;
     }
@@ -43,6 +53,11 @@
   </style>
 </head>
 <body>
+
+  <video id="bgVideo" autoplay muted loop playsinline>
+    <source src="https://raw.githubusercontent.com/BorisChen871111/UNITY-IMAGE/main/video1.mp4" type="video/mp4">
+  </video>
+
   <h2>Random Image Download</h2>
   <a id="downloadLink" download>
     <img id="randomImage" src="">
