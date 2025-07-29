@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Story 分享</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 15px;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #f0f2ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .preview-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #ff4757;
+            color: white;
+        }
+
+        .share-btn {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(240, 148, 51, 0.3);
+            min-width: 200px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(240, 148, 51, 0.4);
+        }
+
+        .share-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .ig-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 14px;
+            color: #1565c0;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">📸 Instagram Story 分享</h1>
+        <p class="subtitle">上傳照片並分享到 Instagram Story</p>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">點擊選擇照片或拖拽到此處</div>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+        
+        <div class="preview-container hidden" id="previewContainer">
+            <img id="previewImage" class="preview-image" alt="預覽">
+            <button class="remove-btn" id="removeBtn">×</button>
+        </div>
+        
+        <button class="share-btn" id="shareBtn" disabled>
+            <svg class="ig-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            分享到 Instagram Story
+        </button>
+        
+        <div class="info-box">
+            <strong>使用說明：</strong>
+            • 支援 JPG、PNG 等常見圖片格式<br>
+            • 建議圖片尺寸：1080x1920 (9:16 比例)<br>
+            • 點擊分享按鈕會開啟 Instagram 應用程式<br>
+            • 需要在手機上安裝 Instagram 應用程式
+        </div>
+        
+        <div id="message" class="message hidden"></div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const removeBtn = document.getElementById('removeBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const message = document.getElementById('message');
+
+        let selectedFile = null;
+
+        // 點擊上傳區域
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // 文件選擇處理
+        fileInput.addEventListener('change', handleFileSelect);
+
+        // 拖拽處理
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // 移除圖片
+        removeBtn.addEventListener('click', () => {
+            selectedFile = null;
+            previewContainer.classList.add('hidden');
+            uploadArea.classList.remove('hidden');
+            shareBtn.disabled = true;
+            showMessage('');
+        });
+
+        // 分享按鈕
+        shareBtn.addEventListener('click', shareToInstagram);
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            // 檢查文件類型
+            if (!file.type.startsWith('image/')) {
+                showMessage('請選擇圖片文件！', 'error');
+                return;
+            }
+
+            // 檢查文件大小 (限制10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showMessage('圖片文件不能超過 10MB！', 'error');
+                return;
+            }
+
+            selectedFile = file;
+            
+            // 創建預覽
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                uploadArea.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+                shareBtn.disabled = false;
+                showMessage('圖片已準備就緒，可以分享到 Instagram Story！', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function shareToInstagram() {
+            if (!selectedFile) {
+                showMessage('請先選擇圖片！', 'error');
+                return;
+            }
+
+            try {
+                // 創建圖片的 blob URL
+                const imageUrl = URL.createObjectURL(selectedFile);
+                
+                // 檢測是否在移動設備上
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                
+                if (isMobile) {
+                    // 移動設備：嘗試打開 Instagram 應用
+                    const instagramUrl = `instagram://story-camera`;
+                    window.location.href = instagramUrl;
+                    
+                    // 備用方案：如果應用沒有打開，顯示下載鏈接
+                    setTimeout(() => {
+                        const link = document.createElement('a');
+                        link.href = imageUrl;
+                        link.download = `instagram-story-${Date.now()}.jpg`;
+                        link.click();
+                        showMessage('已下載圖片，請手動上傳到 Instagram Story', 'success');
+                    }, 1000);
+                } else {
+                    // 桌面設備：下載圖片並提供說明
+                    const link = document.createElement('a');
+                    link.href = imageUrl;
+                    link.download = `instagram-story-${Date.now()}.jpg`;
+                    link.click();
+                    
+                    showMessage('圖片已下載！請在手機上打開 Instagram 並上傳此圖片到 Story', 'success');
+                }
+                
+            } catch (error) {
+                console.error('分享錯誤:', error);
+                showMessage('分享時發生錯誤，請重試', 'error');
+            }
+        }
+
+        function showMessage(text, type = '') {
+            if (!text) {
+                message.classList.add('hidden');
+                return;
+            }
+            
+            message.textContent = text;
+            message.className = `message ${type}`;
+            message.classList.remove('hidden');
+            
+            // 3秒後自動隱藏成功消息
+            if (type === 'success') {
+                setTimeout(() => {
+                    message.classList.add('hidden');
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
