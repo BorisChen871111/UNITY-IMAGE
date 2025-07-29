@@ -14,6 +14,10 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-image: url('YOUR_BACKGROUND_IMAGE_URL_HERE');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,10 +26,11 @@
         }
 
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             max-width: 500px;
             width: 100%;
             text-align: center;
@@ -83,60 +88,56 @@
             transform: rotate(180deg);
         }
 
-        .share-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
         .share-btn {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 15px 30px;
             border-radius: 50px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            min-width: 120px;
-            text-decoration: none;
-            color: white;
+            gap: 10px;
+            min-width: 200px;
+            margin-bottom: 20px;
         }
 
         .share-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
 
-        .instagram-btn {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            box-shadow: 0 5px 15px rgba(240, 148, 51, 0.3);
+        .share-options {
+            background: rgba(248, 249, 250, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid #e9ecef;
         }
 
-        .instagram-btn:hover {
-            box-shadow: 0 8px 25px rgba(240, 148, 51, 0.4);
+        .share-option-btn {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            text-align: center;
         }
 
-        .facebook-btn {
-            background: linear-gradient(45deg, #1877f2, #42a5f5);
-            box-shadow: 0 5px 15px rgba(24, 119, 242, 0.3);
-        }
-
-        .facebook-btn:hover {
-            box-shadow: 0 8px 25px rgba(24, 119, 242, 0.4);
-        }
-
-        .threads-btn {
-            background: linear-gradient(45deg, #101010, #333);
-            box-shadow: 0 5px 15px rgba(16, 16, 16, 0.3);
-        }
-
-        .threads-btn:hover {
-            box-shadow: 0 8px 25px rgba(16, 16, 16, 0.4);
+        .share-option-btn:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            transform: translateY(-1px);
         }
 
         .icon {
@@ -144,15 +145,13 @@
             height: 18px;
             fill: currentColor;
         }
-
-        .message {
             padding: 15px;
             border-radius: 10px;
             margin-top: 20px;
             font-weight: 500;
         }
 
-        .message.success {
+        .message {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
@@ -210,30 +209,22 @@
         
         <div class="image-container">
             <img id="currentImage" class="current-image" alt="鄭南榕歷史影像">
-            <button class="refresh-btn" id="refreshBtn" title="換一張圖片">🔄</button>
+            <button class="refresh-btn" id="refreshBtn" title="換一張圖片">🖼️</button>
         </div>
         
-        <div class="share-buttons">
-            <button class="share-btn instagram-btn" id="instagramBtn">
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-                Instagram
-            </button>
-            
-            <button class="share-btn facebook-btn" id="facebookBtn">
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-                Facebook
-            </button>
-            
-            <button class="share-btn threads-btn" id="threadsBtn">
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.181 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-.584-2.043-1.496-3.467-2.713-4.237-1.297-.82-2.997-1.237-5.054-1.237h-.009c-2.798.02-4.853.946-6.108 2.756-1.226 1.766-1.848 4.18-1.848 7.18v.014c0 3.006.62 5.42 1.843 7.183 1.253 1.803 3.304 2.724 6.094 2.724h.016c2.789 0 4.837-.918 6.084-2.724 1.025-1.485 1.577-3.451 1.641-5.844h-4.852v-1.95h7.138c-.087 3.197-.735 5.756-1.923 7.603-1.747 2.715-4.619 4.09-8.536 4.09z"/>
-                </svg>
-                Threads
-            </button>
+        <button class="share-btn" id="shareBtn">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
+            </svg>
+            分享影像
+        </button>
+
+        <!-- 分享選項 -->
+        <div id="shareOptions" class="share-options hidden">
+            <p style="margin-bottom: 15px; color: #666;">選擇分享方式：</p>
+            <button class="share-option-btn" id="webShareBtn">📱 使用系統分享</button>
+            <button class="share-option-btn" id="copyShareBtn">📋 複製文字+下載圖片</button>
+            <button class="share-option-btn" id="facebookShareBtn">📘 開啟 Facebook 分享</button>
         </div>
         
         <div id="message" class="message hidden"></div>
@@ -250,12 +241,44 @@
 
         const currentImage = document.getElementById('currentImage');
         const refreshBtn = document.getElementById('refreshBtn');
-        const instagramBtn = document.getElementById('instagramBtn');
-        const facebookBtn = document.getElementById('facebookBtn');
-        const threadsBtn = document.getElementById('threadsBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const shareOptions = document.getElementById('shareOptions');
+        const webShareBtn = document.getElementById('webShareBtn');
+        const copyShareBtn = document.getElementById('copyShareBtn');
+        const facebookShareBtn = document.getElementById('facebookShareBtn');
         const message = document.getElementById('message');
 
         let currentImageUrl = '';
+
+        // Facebook 友善的分享文字 - 多個版本
+        const shareTexts = {
+            // 超簡潔版 - 適合 Facebook
+            short: `鄭南榕影像檔案館
+
+鄭南榕為台灣民主犧牲的重要人物
+
+#鄭南榕`,
+
+            // 中等長度版 - 平衡版本
+            medium: `鄭南榕影像檔案館
+
+鄭南榕（1947-1989）為台灣民主自由奉獻生命。
+
+透過歷史影像緬懷這位言論自由先行者。
+
+#鄭南榕 #台灣民主`,
+
+            // 原始版本 - 其他平台使用
+            full: `🏛️ 鄭南榕影像檔案館
+
+來自鄭南榕影像檔案館的珍貴歷史影像，記錄台灣民主自由的重要時刻。
+
+鄭南榕（1947-1989），台灣政治運動者、時事評論員，為爭取言論自由和台灣獨立而犧牲生命。他的理念與精神至今仍深深影響著台灣社會。
+
+📸 透過這些珍貴的歷史影像，我們緬懷這位為民主自由奉獻生命的先行者。
+
+#鄭南榕 #台灣民主 #言論自由 #歷史影像檔案館`
+        };
 
         // 隨機選擇圖片
         function getRandomImage() {
@@ -276,111 +299,60 @@
             showMessage('已換成新的影像！', 'success');
         });
 
-        // 分享到 Instagram
-        instagramBtn.addEventListener('click', () => shareToInstagram());
+        // 顯示分享選項
+        shareBtn.addEventListener('click', () => {
+            shareOptions.classList.toggle('hidden');
+        });
 
-        // 分享到 Facebook
-        facebookBtn.addEventListener('click', () => shareToFacebook());
-
-        // 分享到 Threads
-        threadsBtn.addEventListener('click', () => shareToThreads());
-
-        // Instagram 分享功能
-        async function shareToInstagram() {
+        // Web Share API 分享
+        webShareBtn.addEventListener('click', async () => {
             try {
-                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                
-                if (isMobile) {
-                    // 嘗試使用 Web Share API
-                    if (navigator.share) {
-                        const response = await fetch(currentImageUrl);
-                        const blob = await response.blob();
-                        const file = new File([blob], 'image.jpg', { type: blob.type });
-                        
-                        if (navigator.canShare({ files: [file] })) {
-                            await navigator.share({
-                                files: [file],
-                                title: '鄭南榕影像檔案館',
-                                text: '來自鄭南榕影像檔案館的珍貴歷史影像'
-                            });
-                            showMessage('請選擇 Instagram 來分享！', 'success');
-                            return;
-                        }
-                    }
-                    
-                    // 備用：嘗試打開 Instagram
-                    window.open('instagram://story-camera', '_blank');
-                    setTimeout(() => {
-                        copyImageToClipboard();
-                    }, 1000);
-                } else {
-                    // 桌面版：下載圖片
-                    downloadImage('instagram');
-                }
-            } catch (error) {
-                console.error('Instagram 分享失敗:', error);
-                downloadImage('instagram');
-            }
-        }
-
-        // Facebook 分享功能
-        function shareToFacebook() {
-            const shareUrl = encodeURIComponent(window.location.href);
-            const shareText = encodeURIComponent('來自鄭南榕影像檔案館的珍貴歷史影像');
-            const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${shareText}`;
-            
-            window.open(facebookUrl, '_blank', 'width=600,height=400');
-            showMessage('已開啟 Facebook 分享視窗！', 'success');
-        }
-
-        // Threads 分享功能
-        async function shareToThreads() {
-            try {
-                const shareText = '來自鄭南榕影像檔案館的珍貴歷史影像 ' + window.location.href;
-                
                 if (navigator.share) {
                     await navigator.share({
                         title: '鄭南榕影像檔案館',
-                        text: shareText,
-                        url: window.location.href
+                        text: shareTexts.short, // 使用最短版本
                     });
-                    showMessage('請選擇 Threads 來分享！', 'success');
+                    showMessage('✅ 分享成功！', 'success');
                 } else {
-                    // 備用：複製文字到剪貼簿
-                    if (navigator.clipboard) {
-                        await navigator.clipboard.writeText(shareText);
-                        showMessage('分享文字已複製到剪貼簿！請手動貼到 Threads', 'success');
-                    } else {
-                        showMessage('請手動複製連結到 Threads 分享', 'error');
-                    }
+                    throw new Error('不支援 Web Share API');
                 }
             } catch (error) {
-                console.error('Threads 分享失敗:', error);
-                showMessage('分享時發生錯誤，請重試', 'error');
+                if (error.name !== 'AbortError') {
+                    showMessage('❌ 分享失敗，請嘗試其他方式', 'error');
+                }
             }
-        }
+            shareOptions.classList.add('hidden');
+        });
 
-        // 複製圖片到剪貼簿
-        async function copyImageToClipboard() {
+        // 複製文字並下載圖片
+        copyShareBtn.addEventListener('click', async () => {
             try {
-                const response = await fetch(currentImageUrl);
-                const blob = await response.blob();
-                
-                if (navigator.clipboard && window.ClipboardItem) {
-                    const item = new ClipboardItem({ [blob.type]: blob });
-                    await navigator.clipboard.write([item]);
-                    showMessage('✅ 圖片已複製到剪貼簿！可在 Instagram Story 中直接貼上', 'success');
-                } else {
-                    downloadImage('clipboard-fallback');
-                }
+                await navigator.clipboard.writeText(shareTexts.full);
+                downloadImage();
+                showMessage('✅ 完整文字已複製，圖片已下載！可直接貼到 Facebook', 'success');
             } catch (error) {
-                console.error('複製到剪貼簿失敗:', error);
-                downloadImage('clipboard-fallback');
+                downloadImage();
+                showMessage('✅ 圖片已下載！請手動複製以下文字：\n\n' + shareTexts.full, 'success');
             }
-        }
+            shareOptions.classList.add('hidden');
+        });
+
+        // Facebook 專用分享
+        facebookShareBtn.addEventListener('click', () => {
+            // 使用 Facebook 分享 URL 與最短文字
+            const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(shareTexts.short)}`;
+            window.open(fbUrl, '_blank', 'width=600,height=500,scrollbars=yes,resizable=yes');
+            
+            // 同時複製文字和下載圖片
+            navigator.clipboard.writeText(shareTexts.short).catch(() => {});
+            setTimeout(() => downloadImage(), 500);
+            
+            showMessage('✅ 已開啟 Facebook 分享！文字已複製，圖片已下載', 'success');
+            shareOptions.classList.add('hidden');
+        });
 
         // 下載圖片
-        function downloadImage(source) {
+        function downloadImage() {
             const link = document.createElement('a');
             link.href = currentImageUrl;
             link.download = `鄭南榕影像檔案館-${Date.now()}.jpg`;
@@ -389,11 +361,21 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
-            if (source === 'instagram') {
-                showMessage('📱 圖片已下載！請在手機上打開 Instagram 並選擇此圖片上傳', 'success');
-            } else {
-                showMessage('📱 圖片已下載！', 'success');
+        }
+
+        // 備用分享方案（保留但簡化）
+        async function fallbackShare() {
+            try {
+                if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(shareTexts.full);
+                    showMessage('✅ 文字已複製！同時下載圖片', 'success');
+                } else {
+                    showMessage('請手動複製文字並保存圖片', 'success');
+                }
+                downloadImage();
+            } catch (error) {
+                downloadImage();
+                showMessage('圖片已下載，請手動複製文字', 'error');
             }
         }
 
